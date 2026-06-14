@@ -12,6 +12,8 @@ import { useLocation } from "wouter";
 import { DonateModal } from "./donate-modal";
 import { RecycleModal } from "./recycle-modal";
 import { RefurbishModal } from "./refurbish-modal";
+import { getToken } from "../lib/auth";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const categories = ["electronics", "clothing", "footwear", "furniture", "appliances", "books", "toys", "sports", "other"];
 const conditions = ["Like New", "Excellent", "Good", "Fair"];
@@ -32,11 +34,11 @@ const gradeColor: Record<string, string> = {
 
 // Required photo angles
 const REQUIRED_ANGLES = [
-  { id: "front",  label: "Front View",        icon: ScanLine,   hint: "Main face of the product" },
-  { id: "back",   label: "Back View",          icon: RotateCcw,  hint: "Rear side clearly visible" },
-  { id: "left",   label: "Left Side",          icon: ArrowLeft,  hint: "Left profile of the item" },
-  { id: "right",  label: "Right Side",         icon: ArrowRight, hint: "Right profile of the item" },
-  { id: "detail", label: "Close-up / Detail",  icon: Layers,     hint: "Defects, ports, labels, etc." },
+  { id: "front", label: "Front View", icon: ScanLine, hint: "Main face of the product" },
+  { id: "back", label: "Back View", icon: RotateCcw, hint: "Rear side clearly visible" },
+  { id: "left", label: "Left Side", icon: ArrowLeft, hint: "Left profile of the item" },
+  { id: "right", label: "Right Side", icon: ArrowRight, hint: "Right profile of the item" },
+  { id: "detail", label: "Close-up / Detail", icon: Layers, hint: "Defects, ports, labels, etc." },
 ];
 
 type PhotoSlot = {
@@ -121,10 +123,13 @@ export function ListItemModal({ onClose }: Props) {
       prev.map((p) => (p.id === slotId ? { ...p, uploading: true, error: undefined } : p))
     );
     try {
-      const res = await fetch("/api/upload/presign", {
+      const res = await fetch(`${API_URL}/api/upload/presign`, {
         method: "POST",
         credentials: "include",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`
+        },
         body: JSON.stringify({ filename: file.name, contentType: file.type }),
       });
       if (!res.ok) throw new Error("Failed to get upload URL");
@@ -186,10 +191,13 @@ export function ListItemModal({ onClose }: Props) {
     setAiResult(null);
     try {
       const imageUrls = photos.map((p) => p.uploadedUrl!);
-      const res = await fetch("/api/p2p/analyze", {
+      const res = await fetch(`${API_URL}/api/p2p/analyze`, {
         method: "POST",
         credentials: "include",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`
+        },
         body: JSON.stringify({
           imageUrls,
           category: form.category,
@@ -363,8 +371,8 @@ export function ListItemModal({ onClose }: Props) {
                         border: isDone
                           ? "2px solid #22C55E"
                           : isMissing || isError
-                          ? "2px solid #EF4444"
-                          : "2px dashed var(--color-border)",
+                            ? "2px solid #EF4444"
+                            : "2px dashed var(--color-border)",
                         background: isDone ? "transparent" : "var(--color-bg-elevated)",
                       }}
                     >
