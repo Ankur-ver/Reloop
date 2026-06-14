@@ -1,0 +1,7 @@
+{
+  "buildCommand": "cd packages/web && bun run build",
+  "outputDirectory": "packages/web/dist",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/index" }
+  ]
+}
