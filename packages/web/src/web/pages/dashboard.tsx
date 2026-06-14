@@ -13,7 +13,7 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
   RadialBarChart, RadialBar,
 } from "recharts";
-
+const API_URL = import.meta.env.VITE_API_URL;
 // ─── Configs ────────────────────────────────────────────────────────────────
 
 const dispositionConfig: Record<string, { label: string; color: string; bg: string; icon: any }> = {
@@ -158,7 +158,7 @@ function EditListingModal({ listing, onClose, onSaved }: { listing: any; onClose
   async function handleSave() {
     setSaving(true); setError("");
     try {
-      const res = await fetch(`/api/p2p/listings/${listing.id}`, {
+      const res = await fetch(`${API_URL}/api/p2p/listings/${listing.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("reloop_token")}` },
         body: JSON.stringify({ ...form, price: parseFloat(form.price) }),
@@ -533,7 +533,7 @@ export default function DashboardPage() {
   const { data: myListingsData, isLoading: listingsLoading } = useQuery({
     queryKey: ["my-p2p-listings"],
     queryFn: async () => {
-      const res = await fetch("/api/p2p/my-listings", {
+      const res = await fetch(`${API_URL}/api/p2p/my-listings`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("reloop_token")}` },
       });
       return res.json();

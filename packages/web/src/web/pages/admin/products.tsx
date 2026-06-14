@@ -9,7 +9,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
   PieChart, Pie, Cell,
 } from "recharts";
-
+const API_URL = import.meta.env.VITE_API_URL;
 const TOOLTIP_STYLE = {
   background: "rgba(5,10,20,0.95)",
   border: "1px solid rgba(255,255,255,0.08)",
@@ -93,7 +93,7 @@ export default function AdminProductsPage() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["admin-products"],
     queryFn: async () => {
-      const res = await fetch("/api/admin/products", { credentials: "include" });
+      const res = await fetch(`${API_URL}/api/admin/products`, { credentials: "include" });
       if (!res.ok) throw new Error("Failed to load");
       return res.json() as Promise<{ products: any[] }>;
     },

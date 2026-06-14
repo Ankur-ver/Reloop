@@ -11,7 +11,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Cell,
   AreaChart, Area,
 } from "recharts";
-
+const API_URL = import.meta.env.VITE_API_URL;
 const TOOLTIP_STYLE = {
   background: "rgba(5,10,20,0.95)",
   border: "1px solid rgba(255,255,255,0.08)",
@@ -316,7 +316,7 @@ export default function AdminLRHN() {
 
   const updateStatus = useMutation({
     mutationFn: async ({ id, status }: { id: number; status: string }) => {
-      const res = await fetch(`/api/admin/lrhn/${id}/status`, {
+      const res = await fetch(`${API_URL}/api/admin/lrhn/${id}/status`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

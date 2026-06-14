@@ -1,14 +1,14 @@
 import { Redirect } from "wouter";
 import { authClient } from "../lib/auth";
 import { useQuery } from "@tanstack/react-query";
-
+const API_URL = import.meta.env.VITE_API_URL;
 export function AdminProtectedRoute({ children }: { children: React.ReactNode }) {
   const { data: session, isPending: sessionPending } = authClient.useSession();
 
   const { data: adminCheck, isPending: checkPending } = useQuery({
     queryKey: ["admin-check"],
     queryFn: async () => {
-      const res = await fetch("/api/admin/check", { credentials: "include" });
+      const res = await fetch(`${API_URL}/api/admin/check`, { credentials: "include" });
       return res.json() as Promise<{ isAdmin: boolean; authenticated: boolean; role: string }>;
     },
     enabled: !!session,

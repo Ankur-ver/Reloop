@@ -4,7 +4,7 @@ import {
   Heart, CheckCircle, XCircle, Star, Recycle, ChevronDown, ChevronUp,
   Leaf, Zap, Droplets, CircleDot, Building, School, Home, Users, Search
 } from "lucide-react";
-
+const API_URL = import.meta.env.VITE_API_URL;
 function parseJSON(str: string | null | undefined, fallback: any = []) {
   if (!str) return fallback;
   try {
@@ -292,7 +292,7 @@ export default function P2PDonationsPage() {
   const { data, isLoading } = useQuery({
     queryKey: ["p2p-donations"],
     queryFn: async () => {
-      const res = await fetch("/api/p2p/donations", { credentials: "include" });
+      const res = await fetch(`${API_URL}/api/p2p/donations`, {credentials: "include" });
       return res.json();
     },
   });

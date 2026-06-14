@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useToast } from "../components/toast";
 import { useCart } from "../components/cart-context";
 import { DonateModal } from "../components/donate-modal";
-
+const API_URL = import.meta.env.VITE_API_URL;
 const gradeConfig: Record<string, { color: string; label: string; desc: string }> = {
   excellent: { color: "#22C55E", label: "Excellent", desc: "Like new — minimal to no signs of use" },
   good: { color: "#3B82F6", label: "Good", desc: "Minor cosmetic wear, fully functional" },
@@ -128,7 +128,7 @@ export default function ProductPage() {
   const { data: replicaData, isLoading: replicaLoading } = useQuery({
     queryKey: ["returned-replicas", id],
     queryFn: async () => {
-      const res = await fetch(`/api/products/${id}/returned-replicas`);
+      const res = await fetch(`${API_URL}/api/products/${id}/returned-replicas`);
       return res.json();
     },
     enabled: !!product && !product.isReturnedItem, // only query replicas for original products

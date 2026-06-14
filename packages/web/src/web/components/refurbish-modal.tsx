@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { X, Wrench, Loader, CheckCircle, AlertCircle, IndianRupee, ChevronRight, Sparkles, Clock, Shield } from "lucide-react";
 import { useToast } from "./toast";
-
+const API_URL = import.meta.env.VITE_API_URL;
 interface Props {
   listing: any;
   aiConcerns: string[];
@@ -96,7 +96,7 @@ Rules:
 - flawsAddressed: what the refurbishment will fix
 - process: 4-6 step refurbishment process`;
 
-      const res = await fetch("/api/ai/chat", {
+      const res = await fetch(`${API_URL}/api/ai/chat`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

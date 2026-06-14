@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { X, Heart, Loader, CheckCircle, Building, School, Home, Users } from "lucide-react";
 import { useToast } from "./toast";
-
+const API_URL = import.meta.env.VITE_API_URL;
 const RECIPIENT_TYPES = [
   { id: "ngo", label: "NGO / Charity", icon: Heart, desc: "Donate to registered non-profits" },
   { id: "school", label: "School / Education", icon: School, desc: "Support students & learning centres" },
@@ -24,7 +24,7 @@ export function DonateModal({ listing, onClose }: Props) {
 
   const donateMutation = useMutation({
     mutationFn: async () => {
-      const res = await fetch("/api/p2p/donations", {
+      const res = await fetch(`${API_URL}/api/p2p/donations`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
