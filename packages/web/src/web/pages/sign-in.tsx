@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { authClient, captureToken } from "../lib/auth";
+const API_URL = import.meta.env.VITE_API_URL;
+import { getToken } from "../lib/auth";
 
 export default function SignInPage() {
   const [, navigate] = useLocation();
@@ -23,7 +25,11 @@ export default function SignInPage() {
       } else {
         // Check admin role via server
         try {
-          const check = await fetch("/api/admin/check", { credentials: "include" });
+          const check = await fetch(`${API_URL}/api/admin/check`, {
+            headers: {
+              Authorization: `Bearer ${getToken()}`,
+            },
+          });
           const { isAdmin } = await check.json();
           navigate(isAdmin ? "/admin" : "/dashboard");
         } catch {
