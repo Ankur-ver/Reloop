@@ -21,7 +21,10 @@ export function DonateModal({ listing, onClose }: Props) {
   const [donateReason, setDonateReason] = useState("");
   const [recipientType, setRecipientType] = useState("ngo");
   const [success, setSuccess] = useState(false);
-
+  const imageUrl =
+  listing.imageUrl?.startsWith("/api/")
+    ? `${API_URL}${listing.imageUrl}`
+    : listing.imageUrl;
   const donateMutation = useMutation({
     mutationFn: async () => {
       const res = await fetch(`${API_URL}/api/p2p/donations`, {
@@ -139,7 +142,7 @@ export function DonateModal({ listing, onClose }: Props) {
           {/* Product preview */}
           <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "var(--color-bg-elevated)", border: "1px solid var(--color-border)" }}>
             <img
-              src={listing.imageUrl || "https://placehold.co/60x60/1a2332/4ade80?text=Item"}
+              src={imageUrl || "https://placehold.co/60x60/1a2332/4ade80?text=Item"}
               alt={listing.title}
               className="w-14 h-14 rounded-lg object-cover flex-shrink-0"
             />

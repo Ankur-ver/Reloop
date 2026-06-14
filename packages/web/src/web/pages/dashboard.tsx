@@ -150,11 +150,15 @@ function EditListingModal({ listing, onClose, onSaved }: { listing: any; onClose
     location: listing.location,
     status: listing.status,
   });
+  const imageUrl =
+  listing.imageUrl?.startsWith("/api/")
+    ? `${API_URL}${listing.imageUrl}`
+    : listing.imageUrl;
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setTimeout(() => setMounted(true), 10); }, []);
-
+  
   async function handleSave() {
     setSaving(true); setError("");
     try {
@@ -196,7 +200,7 @@ function EditListingModal({ listing, onClose, onSaved }: { listing: any; onClose
         </div>
 
         <div className="flex items-center gap-3 mb-5 p-3 rounded-xl" style={{ background: "var(--color-bg-elevated)" }}>
-          <img src={listing.imageUrl} alt={listing.title} className="w-12 h-12 rounded-lg object-cover flex-shrink-0" />
+          <img src={imageUrl} alt={listing.title} className="w-12 h-12 rounded-lg object-cover flex-shrink-0" />
           <div>
             <div className="text-xs" style={{ color: "var(--color-text-muted)" }}>{listing.category}</div>
             <div className="text-sm font-medium truncate" style={{ color: "var(--color-text-primary)" }}>{listing.title}</div>

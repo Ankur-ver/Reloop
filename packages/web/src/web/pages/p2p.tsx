@@ -10,7 +10,7 @@ import { ListItemModal } from "../components/list-item-modal";
 import { authClient } from "../lib/auth";
 import { Link, useLocation } from "wouter";
 import { useCart } from "../components/cart-context";
-
+const API_URL = import.meta.env.VITE_API_URL;
 function parseJSON(str: string | null | undefined, fallback: any = []) {
   if (!str) return fallback;
   try { return typeof str === "string" ? JSON.parse(str) : str; } catch { return fallback; }
@@ -153,7 +153,10 @@ function ListingCard({ listing }: { listing: any }) {
     ? Math.round(((listing.originalPrice - listing.price) / listing.originalPrice) * 100)
     : 0;
   const isSold = listing.status === "sold";
-
+  const imageUrl =
+  listing.imageUrl?.startsWith("/api/")
+    ? `${API_URL}${listing.imageUrl}`
+    : listing.imageUrl;
   const toCartItem = () => ({
     id: String(listing.id),
     title: listing.title,
@@ -171,7 +174,7 @@ function ListingCard({ listing }: { listing: any }) {
       <div className="card-hover rounded-2xl overflow-hidden flex flex-col" style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }}>
         <div className="relative">
           <img
-            src={listing.imageUrl || "https://placehold.co/400x300/1a2332/4ade80?text=No+Image"}
+            src={imageUrl || "https://placehold.co/400x300/1a2332/4ade80?text=No+Image"}
             alt={listing.title}
             className="w-full h-48 object-cover"
             loading="lazy"
