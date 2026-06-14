@@ -36,7 +36,7 @@ export const upload = new Hono()
 
     // Store key directly in the URL — no encodeURIComponent, slashes stay as slashes
     // The proxy route handles decoding via the Hono wildcard param
-    const publicUrl = `/api/upload/img/${key}`;
+    const publicUrl = `${process.env.PUBLIC_API_URL}/api/upload/img/${key}`;
 
     return c.json({ uploadUrl, publicUrl });
   })
