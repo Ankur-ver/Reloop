@@ -15,7 +15,16 @@ export const p2p = new Hono()
       .from(schema.p2pListings)
       .where(eq(schema.p2pListings.status, "active"))
       .orderBy(desc(schema.p2pListings.createdAt));
-    return c.json({ listings }, 200);
+
+    const fixedListings = listings.map((listing) => ({
+      ...listing,
+      imageUrl:
+        listing.imageUrl?.startsWith("/api/")
+          ? `${process.env.PUBLIC_API_URL}${listing.imageUrl}`
+          : listing.imageUrl,
+    }));
+
+    return c.json({ listings: fixedListings }, 200);
   })
 
   .post("/listings", requireAuth, async (c) => {
@@ -55,7 +64,15 @@ export const p2p = new Hono()
       .where(eq(schema.p2pListings.id, id));
     if (!listing) return c.json({ error: "Not found" }, 404);
     await db.update(schema.p2pListings).set({ views: listing.views + 1 }).where(eq(schema.p2pListings.id, id));
-    return c.json({ listing }, 200);
+    const fixedListing = {
+      ...listing,
+      imageUrl:
+        listing.imageUrl?.startsWith("/api/")
+          ? `${process.env.PUBLIC_API_URL}${listing.imageUrl}`
+          : listing.imageUrl,
+    };
+
+    return c.json({ listing: fixedListing }, 200);
   })
 
   .get("/my-listings", requireAuth, async (c) => {
@@ -65,7 +82,15 @@ export const p2p = new Hono()
       .from(schema.p2pListings)
       .where(eq(schema.p2pListings.sellerId, user.id))
       .orderBy(desc(schema.p2pListings.createdAt));
-    return c.json({ listings }, 200);
+    const fixedListings = listings.map((listing) => ({
+      ...listing,
+      imageUrl:
+        listing.imageUrl?.startsWith("/api/")
+          ? `${process.env.PUBLIC_API_URL}${listing.imageUrl}`
+          : listing.imageUrl,
+    }));
+
+    return c.json({ listings: fixedListings }, 200);
   })
 
   .patch("/listings/:id", requireAuth, async (c) => {
@@ -104,10 +129,10 @@ export const p2p = new Hono()
       return c.json({ error: "No images provided" }, 400);
     }
     // Convert relative /api/upload/img/... to absolute for server-side fetch
-    const origin = new URL(c.req.url).origin;
-    const absoluteUrls = imageUrls.map((url) =>
-      url.startsWith("/") ? `${origin}${url}` : url
-    );
+    const absoluteUrls = imageUrls.map((url) => {
+      if (url.startsWith("http")) return url;
+      return `${process.env.PUBLIC_API_URL}${url}`;
+    });
     try {
       const result = await aiAnalyzeP2PPhotos(absoluteUrls, {
         category: body.category,
