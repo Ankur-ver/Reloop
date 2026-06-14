@@ -60,13 +60,16 @@ export const upload = new Hono()
       const contentType = result.ContentType || "image/jpeg";
       const bytes = await result.Body!.transformToByteArray();
 
-      return new Response(bytes, {
-        headers: {
-          "Content-Type": contentType,
-          "Cache-Control": "public, max-age=31536000, immutable",
-          "Content-Length": String(bytes.byteLength),
-        },
-      });
+      return new Response(
+        new Uint8Array(bytes),
+        {
+          headers: {
+            "Content-Type": contentType,
+            "Cache-Control": "public, max-age=31536000, immutable",
+            "Content-Length": String(bytes.byteLength),
+          },
+        }
+      );
     } catch (err: any) {
       console.error("S3 proxy error:", err.message, "key:", key);
       return c.json({ error: "Image not found" }, 404);
