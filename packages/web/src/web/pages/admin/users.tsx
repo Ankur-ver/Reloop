@@ -8,6 +8,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
   ScatterChart, Scatter, ZAxis,
 } from "recharts";
+import { getToken } from "../../lib/auth";
 const API_URL = import.meta.env.VITE_API_URL;
 const TOOLTIP_STYLE = {
   background: "rgba(5,10,20,0.95)",
@@ -56,7 +57,9 @@ export default function AdminUsersPage() {
   const { data, isLoading } = useQuery({
     queryKey: ["admin-users"],
     queryFn: async () => {
-      const res = await fetch(`${API_URL}/api/admin/users`, { credentials: "include" });
+      const res = await fetch(`${API_URL}/api/admin/users`, { headers: {
+    Authorization: `Bearer ${getToken()}`
+  } });
       if (!res.ok) throw new Error("Unauthorized");
       return res.json() as Promise<{ users: any[] }>;
     },

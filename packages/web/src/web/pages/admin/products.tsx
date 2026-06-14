@@ -9,6 +9,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
   PieChart, Pie, Cell,
 } from "recharts";
+import { getToken } from "../../lib/auth";
 const API_URL = import.meta.env.VITE_API_URL;
 const TOOLTIP_STYLE = {
   background: "rgba(5,10,20,0.95)",
@@ -21,16 +22,16 @@ const TOOLTIP_STYLE = {
 
 const gradeColor: Record<string, string> = {
   excellent: "#22C55E",
-  good:      "#84CC16",
-  fair:      "#EAB308",
-  poor:      "#EF4444",
+  good: "#84CC16",
+  fair: "#EAB308",
+  poor: "#EF4444",
 };
 
 const statusConfig: Record<string, { label: string; color: string; icon: any }> = {
-  active:       { label: "Active",       color: "#22C55E", icon: CheckCircle },
-  sold:         { label: "Sold",         color: "#3B82F6", icon: ShoppingBag },
-  pending:      { label: "Pending",      color: "#EAB308", icon: Clock },
-  unavailable:  { label: "Unavailable",  color: "#6B7280", icon: XCircle },
+  active: { label: "Active", color: "#22C55E", icon: CheckCircle },
+  sold: { label: "Sold", color: "#3B82F6", icon: ShoppingBag },
+  pending: { label: "Pending", color: "#EAB308", icon: Clock },
+  unavailable: { label: "Unavailable", color: "#6B7280", icon: XCircle },
   refurbishing: { label: "Refurbishing", color: "#8B5CF6", icon: RefreshCcw },
 };
 
@@ -93,7 +94,11 @@ export default function AdminProductsPage() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["admin-products"],
     queryFn: async () => {
-      const res = await fetch(`${API_URL}/api/admin/products`, { credentials: "include" });
+      const res = await fetch(`${API_URL}/api/admin/products`, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`
+        }
+      });
       if (!res.ok) throw new Error("Failed to load");
       return res.json() as Promise<{ products: any[] }>;
     },

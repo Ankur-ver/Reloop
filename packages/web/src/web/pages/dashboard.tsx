@@ -13,38 +13,39 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
   RadialBarChart, RadialBar,
 } from "recharts";
+import { getToken } from "../lib/auth";
 const API_URL = import.meta.env.VITE_API_URL;
 // ─── Configs ────────────────────────────────────────────────────────────────
 
 const dispositionConfig: Record<string, { label: string; color: string; bg: string; icon: any }> = {
-  resell:    { label: "Resell",    color: "#22C55E", bg: "rgba(34,197,94,0.1)",   icon: ShoppingBag },
-  refurbish: { label: "Refurbish", color: "#3B82F6", bg: "rgba(59,130,246,0.1)",  icon: Zap },
-  donate:    { label: "Donate",    color: "#F59E0B", bg: "rgba(245,158,11,0.1)",  icon: Heart },
-  recycle:   { label: "Recycle",   color: "#6B7280", bg: "rgba(107,114,128,0.1)", icon: Recycle },
-  exchange:  { label: "Exchange",  color: "#8B5CF6", bg: "rgba(139,92,246,0.1)",  icon: ArrowLeftRight },
+  resell: { label: "Resell", color: "#22C55E", bg: "rgba(34,197,94,0.1)", icon: ShoppingBag },
+  refurbish: { label: "Refurbish", color: "#3B82F6", bg: "rgba(59,130,246,0.1)", icon: Zap },
+  donate: { label: "Donate", color: "#F59E0B", bg: "rgba(245,158,11,0.1)", icon: Heart },
+  recycle: { label: "Recycle", color: "#6B7280", bg: "rgba(107,114,128,0.1)", icon: Recycle },
+  exchange: { label: "Exchange", color: "#8B5CF6", bg: "rgba(139,92,246,0.1)", icon: ArrowLeftRight },
 };
 
 const gradeConfig: Record<string, { color: string; label: string }> = {
   excellent: { color: "#22C55E", label: "Excellent" },
-  good:      { color: "#3B82F6", label: "Good" },
-  fair:      { color: "#F59E0B", label: "Fair" },
-  poor:      { color: "#EF4444", label: "Poor" },
+  good: { color: "#3B82F6", label: "Good" },
+  fair: { color: "#F59E0B", label: "Fair" },
+  poor: { color: "#EF4444", label: "Poor" },
 };
 
 const returnStatusConfig: Record<string, { label: string; color: string }> = {
-  initiated:         { label: "Initiated",         color: "#8B5CF6" },
-  pickup_scheduled:  { label: "Pickup Scheduled",  color: "#3B82F6" },
-  picked_up:         { label: "Picked Up",         color: "#F59E0B" },
-  in_transit:        { label: "In Transit",        color: "#F59E0B" },
-  processed:         { label: "Processed",         color: "#22C55E" },
-  listed:            { label: "Listed",            color: "#22C55E" },
-  donated:           { label: "Donated",           color: "#F59E0B" },
-  recycled:          { label: "Recycled",          color: "#6B7280" },
+  initiated: { label: "Initiated", color: "#8B5CF6" },
+  pickup_scheduled: { label: "Pickup Scheduled", color: "#3B82F6" },
+  picked_up: { label: "Picked Up", color: "#F59E0B" },
+  in_transit: { label: "In Transit", color: "#F59E0B" },
+  processed: { label: "Processed", color: "#22C55E" },
+  listed: { label: "Listed", color: "#22C55E" },
+  donated: { label: "Donated", color: "#F59E0B" },
+  recycled: { label: "Recycled", color: "#6B7280" },
 };
 
 const listingStatusConfig: Record<string, { label: string; color: string; bg: string }> = {
-  active:  { label: "Active",  color: "#22C55E", bg: "rgba(34,197,94,0.1)" },
-  sold:    { label: "Sold",    color: "#6B7280", bg: "rgba(107,114,128,0.1)" },
+  active: { label: "Active", color: "#22C55E", bg: "rgba(34,197,94,0.1)" },
+  sold: { label: "Sold", color: "#6B7280", bg: "rgba(107,114,128,0.1)" },
   expired: { label: "Expired", color: "#EF4444", bg: "rgba(239,68,68,0.1)" },
 };
 
@@ -151,20 +152,23 @@ function EditListingModal({ listing, onClose, onSaved }: { listing: any; onClose
     status: listing.status,
   });
   const imageUrl =
-  listing.imageUrl?.startsWith("/api/")
-    ? `${API_URL}${listing.imageUrl}`
-    : listing.imageUrl;
+    listing.imageUrl?.startsWith("/api/")
+      ? `${API_URL}${listing.imageUrl}`
+      : listing.imageUrl;
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setTimeout(() => setMounted(true), 10); }, []);
-  
+
   async function handleSave() {
     setSaving(true); setError("");
     try {
       const res = await fetch(`${API_URL}/api/p2p/listings/${listing.id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("reloop_token")}` },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`
+        },
         body: JSON.stringify({ ...form, price: parseFloat(form.price) }),
       });
       if (!res.ok) throw new Error();
@@ -293,12 +297,12 @@ function SectionHeader({ icon: Icon, title, action }: { icon: any; title: string
 // ─── Return Tracking Stepper ─────────────────────────────────────────────────
 
 const RETURN_STAGES: { key: string; label: string }[] = [
-  { key: "initiated",        label: "Initiated" },
+  { key: "initiated", label: "Initiated" },
   { key: "pickup_scheduled", label: "Pickup Scheduled" },
-  { key: "picked_up",        label: "Picked Up" },
-  { key: "in_transit",       label: "In Transit" },
-  { key: "processed",        label: "Processed" },
-  { key: "listed",           label: "Completed" }, // covers listed/donated/recycled
+  { key: "picked_up", label: "Picked Up" },
+  { key: "in_transit", label: "In Transit" },
+  { key: "processed", label: "Processed" },
+  { key: "listed", label: "Completed" }, // covers listed/donated/recycled
 ];
 
 // Map terminal statuses to the last stage index
@@ -538,7 +542,9 @@ export default function DashboardPage() {
     queryKey: ["my-p2p-listings"],
     queryFn: async () => {
       const res = await fetch(`${API_URL}/api/p2p/my-listings`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("reloop_token")}` },
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
       });
       return res.json();
     },
@@ -600,9 +606,9 @@ export default function DashboardPage() {
 
       {/* ── Stats Grid ── */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard label="Total Returns"   value={stats.totalReturns}  icon={RefreshCcw}  color="#22C55E" suffix="" />
-        <StatCard label="Green Credits"   value={stats.greenCredits}  icon={Coins}       color="#F59E0B" suffix="" />
-        <StatCard label="CO₂ Saved"       value={stats.co2SavedKg}    icon={Globe}       color="#3B82F6" suffix="kg" decimals={1} />
+        <StatCard label="Total Returns" value={stats.totalReturns} icon={RefreshCcw} color="#22C55E" suffix="" />
+        <StatCard label="Green Credits" value={stats.greenCredits} icon={Coins} color="#F59E0B" suffix="" />
+        <StatCard label="CO₂ Saved" value={stats.co2SavedKg} icon={Globe} color="#3B82F6" suffix="kg" decimals={1} />
         <StatCard label="Active Listings" value={stats.activeListings || stats.activeProducts || 0} icon={ShoppingBag} color="#8B5CF6" suffix="" />
       </div>
 
