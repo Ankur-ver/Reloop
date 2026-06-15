@@ -1,10 +1,10 @@
-# ♻️ ReLoop
+# ReLoop
 
 **ReLoop** is a sustainable commerce platform that gives returned and underutilized products a meaningful second life. Instead of immediately shipping returned products back to central warehouses, ReLoop introduces a **Local Return Holding Network (LRHN)** that temporarily stores eligible returns at nearby hubs and intelligently matches them with local demand, reducing logistics costs, delivery times, and environmental impact.
 
 ---
 
-# 🌍 Problem
+# Problem
 
 Traditional reverse logistics is expensive and inefficient.
 
@@ -25,7 +25,7 @@ This process creates:
 
 ---
 
-# 💡 Solution: Local Return Holding Network (LRHN)
+# Solution: Local Return Holding Network (LRHN)
 
 ReLoop transforms returned products into **temporary local inventory**.
 
@@ -57,7 +57,7 @@ If demand is detected during the holding period, the product is shipped directly
 
 ---
 
-# 🚀 Key Features
+# Key Features
 
 ## Local Return Holding Network
 
@@ -150,7 +150,7 @@ Customers receive:
 
 ---
 
-# 📁 Project Structure
+# Project Structure
 
 ```text
 packages/
@@ -171,7 +171,7 @@ packages/
 
 ---
 
-# 🔐 Admin Portal
+# Admin Portal
 
 The platform includes a protected Admin Dashboard available at:
 
@@ -183,7 +183,7 @@ Only authorized administrators can access operational data and LRHN management t
 
 ---
 
-# 📊 Admin Dashboard
+# Admin Dashboard
 
 ## Dashboard Overview
 
@@ -408,7 +408,7 @@ Returns peer-to-peer marketplace listings.
 
 ---
 
-# 🔒 Authentication & Authorization
+# Authentication & Authorization
 
 Admin routes are protected using:
 
