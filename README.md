@@ -113,7 +113,7 @@ Customers receive:
 
 ---
 
-# 🛠 Tech Stack
+# Tech Stack
 
 ## Monorepo
 
@@ -348,7 +348,7 @@ admin
 
 ---
 
-# 🔌 API Routes
+# API Routes
 
 ## Admin Stats
 
@@ -428,7 +428,7 @@ Checks:
 
 ---
 
-# 📈 Sustainability Impact
+# Sustainability Impact
 
 ReLoop aims to:
 
@@ -447,7 +447,7 @@ Key Metrics:
 * Logistics cost savings
 
 
-# 🎯 Vision
+# Vision
 
 **ReLoop's mission is to ensure that every returned product gets the most efficient next destination before entering the traditional reverse logistics chain.**
 
